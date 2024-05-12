@@ -3,7 +3,9 @@
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@tableland/cli": "latest",
+    "@tableland/local": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

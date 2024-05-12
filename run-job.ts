@@ -1,32 +1,8 @@
 #!/usr/bin/env bun
 import { $ } from "bun";
 
-import { Database } from "@tableland/sdk";
-import { Wallet, getDefaultProvider } from "ethers";
+import { tableName, db } from "./config.ts";
 
-// configurable
-const privateKey =
-  "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-const provider = getDefaultProvider("http://127.0.0.1:8545");
-const tableName = "test_runs_31337_3";
-
-// body
-interface RunsSchema {
-  id: number;
-  status_code: number;
-  ts_start: number;
-  ts_end: number;
-
-  command: string;
-  result_ipfs_url: string;
-  addr_resource_provider: string;
-  addr_mediator: string;
-  addr_solver: string;
-}
-
-const wallet = new Wallet(privateKey);
-const signer = wallet.connect(provider);
-const db = new Database<RunsSchema>({ signer });
 const commandBody = Bun.argv.slice(2);
 
 const tsStart = Math.floor(new Date().getTime() / 1000);
