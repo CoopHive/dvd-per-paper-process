@@ -9,7 +9,7 @@
 7. Run job: e.g. `./run-job.ts cowsay:v0.0.1 -i Message=moo`
 
 Other docs:
-[Tableland CLI](https://docs.tableland.xyz/quickstarts/cli-quickstart#4-write-data)
-[Tableland SDK](https://docs.tableland.xyz/quickstarts/sdk-quickstart)
+- [Tableland CLI](https://docs.tableland.xyz/quickstarts/cli-quickstart#4-write-data)
+- [Tableland SDK](https://docs.tableland.xyz/quickstarts/sdk-quickstart)
 
 This project was created using `bun init` in bun v1.1.7. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
