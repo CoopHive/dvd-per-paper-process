@@ -1,11 +1,15 @@
 {
-  "name": "tableland",
+  "name": "coophive-persister",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "run-job": "bun run run-job.ts",
+    "create-db": "bun run create-db.ts"
+  },
   "devDependencies": {
-    "@types/bun": "latest",
     "@tableland/cli": "latest",
-    "@tableland/local": "latest"
+    "@tableland/local": "latest",
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

@@ -1,10 +1,11 @@
-#!/usr/bin/env bun
 import { prefix, db } from "./config.ts";
 
-const { meta: create } = await db
-  .prepare(
-    `CREATE TABLE ${prefix} (
+const main = async () => {
+  const { meta: create } = await db
+    .prepare(
+      `CREATE TABLE ${prefix} (
       id INTEGER PRIMARY KEY,
+      uuid TEXT NOT NULL,
       status_code INTEGER DEFAULT 2,
       ts_start INTEGER NOT NULL,
       ts_end INTEGER,
@@ -15,9 +16,12 @@ const { meta: create } = await db
       addr_mediator TEXT,
       addr_solver TEXT
     );`
-  )
-  .run();
-await create.txn?.wait();
-const tableName = create.txn?.names[0] ?? "";
+    )
+    .run();
 
-console.log("Table created: ", tableName);
+  await create.txn?.wait();
+  const tableName = create.txn?.names[0] ?? "";
+  console.log("Table created: ", tableName);
+};
+
+main();
