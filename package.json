@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "run-job": "bun run run-job.ts",
-    "create-db": "bun run create-db.ts"
+    "create-db": "bun run create-db.ts",
+    "create-desci-node": "tsx desci-nodes-client/create-desci-node.ts"
   },
   "devDependencies": {
     "@tableland/cli": "latest",
