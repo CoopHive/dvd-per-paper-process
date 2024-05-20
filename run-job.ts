@@ -1,36 +1,11 @@
-import { tableName, db } from "./config.ts";
-import { spawn } from "child_process";
-
-const sh = (command: string, args: string[]) => {
-  const child = spawn(command, args);
-  let stdout = "";
-  let stderr = "";
-
-  child.stdout.on("data", (data) => {
-    process.stdout.write(data);
-    stdout += data.toString();
-  });
-  child.stderr.on("data", (data) => {
-    process.stderr.write(data);
-    stderr += data.toString();
-  });
-
-  return new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
-    child.on("exit", (code) => {
-      if (code === 0) {
-        resolve({ stdout, stderr });
-      } else {
-        reject(new Error(`Command failed with code ${code}`));
-      }
-    });
-  });
-};
+import { tableName, db, desciUuid } from "./config.ts";
+import { $ } from "bun";
 
 const main = async () => {
-  const commandBody = process.argv.slice(2);
+  const commandBody = Bun.argv.slice(2);
 
   const tsStart = Math.floor(new Date().getTime() / 1000);
-  const { stdout } = await sh("hive", ["run", ...commandBody]);
+  const { stdout } = await $`hive run ${commandBody}`;
   const tsEnd = Math.floor(new Date().getTime() / 1000);
   const runUuid = crypto.randomUUID();
 
@@ -62,5 +37,23 @@ const main = async () => {
     .run()
     .then(({ meta: insert }) => insert.txn?.wait());
   console.log("Job successfully saved to DB");
+
+  try {
+    Bun.write(
+      `tmp/${tsStart}_${runUuid}.json`,
+      JSON.stringify({
+        run_uuid: runUuid,
+        ts_start: tsStart,
+        ts_end: tsEnd,
+        command: commandBody.join(" "),
+        result_ipfs_url: ipfsUrl,
+      })
+    );
+    await $`tsx desci-nodes-client/create-run.ts ${desciUuid} tmp/${tsStart}_${runUuid}.json`;
+    console.log("Job successfully published to DeSci Nodes");
+  } finally {
+    await $`rm tmp/${tsStart}_${runUuid}.json`;
+  }
 };
+
 main();

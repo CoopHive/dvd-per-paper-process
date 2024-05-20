@@ -9,7 +9,8 @@
   "devDependencies": {
     "@tableland/cli": "latest",
     "@tableland/local": "latest",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "tsx": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
