@@ -1,11 +1,23 @@
 import { Database } from "@tableland/sdk";
 import { Wallet, getDefaultProvider } from "ethers";
 
-export const prefix = "test_runs";
-export const tableName = "test_runs_31337_2";
-export const desciUuid = "SBOXWV_zGM8_lsGnG0GRQs6rXH6MVkCXb78-9IkBdLM";
+const missingEnvVars = [
+  "TABLELAND_PKEY",
+  "TABLELAND_NETWORK",
+  "TABLELAND_TABLE_PREFIX",
+  "TABLELAND_TABLE_NAME",
+  "DESCI_NODE_UUID",
+].filter((envVar) => !process.env[envVar]);
 
-export const desciNodeUuid = "JLJqlZn1XfE3iJgfG4TR8RZPRdSvI-0jXag9kvTZqBc";
+if (missingEnvVars.length) {
+  throw new Error(
+    `Missing environment variables: ${missingEnvVars.join(", ")}`
+  );
+}
+
+export const prefix = process.env.TABLELAND_TABLE_PREFIX;
+export const tableName = process.env.TABLELAND_TABLE_NAME;
+export const desciUuid = process.env.DESCI_NODE_UUID;
 
 export interface RunsSchema {
   id: number;
@@ -18,9 +30,7 @@ export interface RunsSchema {
   addr_solver: string;
 }
 
-const wallet = new Wallet(
-  "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
-);
-const provider = getDefaultProvider("http://127.0.0.1:8545");
+const wallet = new Wallet(process.env.TABLELAND_PKEY as string);
+const provider = getDefaultProvider(process.env.TABLELAND_NETWORK as string);
 const signer = wallet.connect(provider);
 export const db = new Database<RunsSchema>({ signer });
