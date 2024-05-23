@@ -3,9 +3,9 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "run-job": "bun run run-job.ts",
-    "create-db": "bun run create-db.ts",
-    "create-desci-node": "tsx desci-nodes-client/create-desci-node.ts"
+    "run-job": "tsx --env-file=.env run-job.ts",
+    "create-db": "tsx --env-file=.env create-db.ts",
+    "create-node": "tsx --env-file=.env create-desci-node.ts"
   },
   "devDependencies": {
     "@tableland/cli": "latest",
