@@ -5,7 +5,7 @@
   "scripts": {
     "run-job": "tsx --env-file=.env src/run-job.ts",
     "create-db": "tsx --env-file=.env src/create-db.ts",
-    "create-node": "tsx --env-file=.env src/reate-desci-node.ts"
+    "create-node": "tsx --env-file=.env src/create-desci-node.ts"
   },
   "devDependencies": {
     "@tableland/cli": "latest",
