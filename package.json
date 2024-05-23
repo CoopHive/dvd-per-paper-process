@@ -3,9 +3,9 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "run-job": "tsx --env-file=.env run-job.ts",
-    "create-db": "tsx --env-file=.env create-db.ts",
-    "create-node": "tsx --env-file=.env create-desci-node.ts"
+    "run-job": "tsx --env-file=.env src/run-job.ts",
+    "create-db": "tsx --env-file=.env src/create-db.ts",
+    "create-node": "tsx --env-file=.env src/reate-desci-node.ts"
   },
   "devDependencies": {
     "@tableland/cli": "latest",
