@@ -1,21 +1,10 @@
 // third-party sdks
-import {
-  publishDraftNode,
-  setApiKey,
-  uploadFiles,
-} from "@desci-labs/nodes-lib";
-import { signerFromPkey } from "@desci-labs/nodes-lib/dist/util/signing";
+import { publishDraftNode, uploadFiles } from "@desci-labs/nodes-lib";
 // node
 import { spawn } from "child_process";
 import fs from "fs";
 // config
-import { db, desciUuid, tableName } from "./config.ts";
-
-if (!process.env.DESCI_API_KEY || !process.env.DESCI_PKEY) {
-  throw new Error("DESCI_API_KEY and DESCI_PKEY must be set");
-}
-setApiKey(process.env.DESCI_API_KEY as string);
-const nodesSigner = signerFromPkey(process.env.DESCI_PKEY as string);
+import { db, desciUuid, nodesSigner, tableName } from "./config.ts";
 
 // util
 const sh = (command: string, args: string[]) => {
@@ -50,13 +39,11 @@ const uploadJsonToDesci = async (
 ) => {
   try {
     fs.writeFileSync(`tmp/${fileName}.json`, JSON.stringify(data));
-
     await uploadFiles({
       uuid: nodeUuid,
       contextPath: "/runs",
       files: [`tmp/${fileName}.json`],
     });
-
     await publishDraftNode(nodeUuid, nodesSigner);
   } finally {
     await fs.rmSync(`tmp/${fileName}.json`);

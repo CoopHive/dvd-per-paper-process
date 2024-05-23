@@ -1,5 +1,7 @@
 import { Database } from "@tableland/sdk";
 import { Wallet, getDefaultProvider } from "ethers-6";
+import { signerFromPkey } from "@desci-labs/nodes-lib/dist/util/signing";
+import { setApiKey } from "@desci-labs/nodes-lib";
 
 const missingEnvVars = [
   "TABLELAND_PKEY",
@@ -7,6 +9,8 @@ const missingEnvVars = [
   "TABLELAND_TABLE_PREFIX",
   "TABLELAND_TABLE_NAME",
   "DESCI_NODE_UUID",
+  "DESCI_API_KEY",
+  "DESCI_PKEY",
 ].filter((envVar) => !process.env[envVar]);
 
 if (missingEnvVars.length) {
@@ -34,3 +38,6 @@ const wallet = new Wallet(process.env.TABLELAND_PKEY as string);
 const provider = getDefaultProvider(process.env.TABLELAND_NETWORK as string);
 const signer = wallet.connect(provider);
 export const db = new Database<RunsSchema>({ signer });
+
+setApiKey(process.env.DESCI_API_KEY as string);
+export const nodesSigner = signerFromPkey(process.env.DESCI_PKEY as string);

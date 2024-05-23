@@ -10,7 +10,6 @@
   "devDependencies": {
     "@tableland/cli": "latest",
     "@tableland/local": "latest",
-    "@types/bun": "latest",
     "tsx": "latest"
   },
   "peerDependencies": {
