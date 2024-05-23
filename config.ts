@@ -1,5 +1,5 @@
 import { Database } from "@tableland/sdk";
-import { Wallet, getDefaultProvider } from "ethers";
+import { Wallet, getDefaultProvider } from "ethers-6";
 
 const missingEnvVars = [
   "TABLELAND_PKEY",
