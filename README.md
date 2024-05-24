@@ -18,7 +18,7 @@
 2. Change `DESCI_SERVER` in `.env` to `"prod"`
 3. Change `DESCI_PKEY` and `TABLELAND_PKEY` to mainnet private keys. Change `DESCI_API_KEY` to a [mainnet](https://nodes.desci.com) API key.
 
-##Notes
+## Notes
 - If CoopHive fails with an error like `error loading module`, try `rm -rf /tmp/coophive/data/repos`
 - `run-job.ts` and `create-desci-node.ts` *must* be run with Node.js, not Bun or Deno, because `nodes-lib` depends on the Node.js filesystem API to upload files. `bun run run-job` is fine because `run-job` is defined as `tsx --env-file=.env run-job.ts` in `package.json`, but `bun run run-job.ts` won't work.
 
