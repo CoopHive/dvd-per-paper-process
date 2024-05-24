@@ -1,5 +1,6 @@
 {
-  "tablelandUrl": "foo",
-  "tablelandTable": "bar",
-  "chromaUrl": "baz"
+  "projectName": "test runs",
+  "projectDescription": "test runs of coophive modules, logging to tableland and desci nodes for reproducability and retroactive reward",
+  "tablelandNetwork": "local",
+  "tablelandTable": "test_runs_31337_2"
 }
