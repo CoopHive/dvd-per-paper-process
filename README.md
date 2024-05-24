@@ -14,6 +14,7 @@
 
 ## Prod
 1. Change `TABLELAND_NETWORK` in `.env` to a real [provider](https://docs.tableland.xyz/validator/) (e.g. [Alchemy](https://www.alchemy.com/) or [QuickNode](https://www.quicknode.com/)) for the [chain](https://docs.tableland.xyz/fundamentals/supported-chains) you want to index on.
+2. Change `DESCI_SERVER` in `.env` to `"prod"`
 
 Note: `run-job.ts` and `create-desci-node.ts` *must* be run with Node.js, not Bun or Deno, because `nodes-lib` depends on the Node.js filesystem API to upload files. `bun run run-job` is fine because `run-job` is defined as `tsx --env-file=.env run-job.ts` in `package.json`, but `bun run run-job.ts` won't work.
 
