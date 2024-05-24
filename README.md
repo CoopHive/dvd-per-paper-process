@@ -10,14 +10,17 @@
 7. Edit `res/metadata.json` to appropriate node-level metadata for the Desci node.
 8. Create DeSci node: `npm run create-node`
 9. Edit `DESCI_NODE_UUID` in `.env` to the node that was just created
-10. Run job: e.g. `npm run run-job cowsay:v0.0.1 -i Message=moo`
+10. Edit `COOPHIVE_PKEY` in `.env` to an account with some [Halcyon testnet](http://halcyon-faucet.co-ophive.network:8085) ETH & HIVE. See the [CoopHive Docs](https://github.com/CoopHive/coophive#getting-started) for details.
+11. Run job: e.g. `npm run run-job cowsay:v0.0.1 -i Message=moo`
 
 ## Prod
 1. Change `TABLELAND_NETWORK` in `.env` to a real [provider](https://docs.tableland.xyz/validator/) (e.g. [Alchemy](https://www.alchemy.com/) or [QuickNode](https://www.quicknode.com/)) for the [chain](https://docs.tableland.xyz/fundamentals/supported-chains) you want to index on.
 2. Change `DESCI_SERVER` in `.env` to `"prod"`
 3. Change `DESCI_PKEY` and `TABLELAND_PKEY` to mainnet private keys. Change `DESCI_API_KEY` to a [mainnet](https://nodes.desci.com) API key.
 
-Note: `run-job.ts` and `create-desci-node.ts` *must* be run with Node.js, not Bun or Deno, because `nodes-lib` depends on the Node.js filesystem API to upload files. `bun run run-job` is fine because `run-job` is defined as `tsx --env-file=.env run-job.ts` in `package.json`, but `bun run run-job.ts` won't work.
+##Notes
+- If CoopHive fails with an error like `error loading module`, try `rm -rf /tmp/coophive/data/repos`
+- `run-job.ts` and `create-desci-node.ts` *must* be run with Node.js, not Bun or Deno, because `nodes-lib` depends on the Node.js filesystem API to upload files. `bun run run-job` is fine because `run-job` is defined as `tsx --env-file=.env run-job.ts` in `package.json`, but `bun run run-job.ts` won't work.
 
 Other docs:
 - [Tableland CLI](https://docs.tableland.xyz/quickstarts/cli-quickstart#4-write-data)

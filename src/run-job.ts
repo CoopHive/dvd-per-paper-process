@@ -1,5 +1,6 @@
 // third-party sdks
 import { publishDraftNode, uploadFiles } from "@desci-labs/nodes-lib";
+import ethers from "ethers";
 // node
 import { spawn } from "child_process";
 import fs from "fs";
@@ -55,17 +56,21 @@ const main = async () => {
   const commandBody = process.argv.slice(2);
 
   const tsStart = Math.floor(new Date().getTime() / 1000);
+  process.env["WEB3_PRIVATE_KEY"] = process.env.COOPHIVE_PKEY;
   const { stdout } = await sh("hive", ["run", ...commandBody]);
   const tsEnd = Math.floor(new Date().getTime() / 1000);
   const runUuid = crypto.randomUUID();
+  const pubKey = ethers.utils.computePublicKey(
+    process.env.COOPHIVE_PKEY as string
+  );
 
   // failure
   if (!stdout.includes("Results accepted.")) {
     await db
       .prepare(
-        `INSERT INTO ${tableName} (uuid, ts_start, ts_end, command, status_code) VALUES (?, ?, ?, ?, ?);`
+        `INSERT INTO ${tableName} (uuid, ts_start, ts_end, command, status_code, addr_requester) VALUES (?, ?, ?, ?, ?, ?);`
       )
-      .bind(runUuid, tsStart, tsEnd, commandBody.join(" "), 1)
+      .bind(runUuid, tsStart, tsEnd, commandBody.join(" "), 1, pubKey)
       .run()
       .then(({ meta: insert }) => insert.txn?.wait());
     throw new Error("Job failed");
@@ -81,9 +86,9 @@ const main = async () => {
 
   await db
     .prepare(
-      `INSERT INTO ${tableName} (uuid, ts_start, ts_end, command, result_ipfs_url, status_code) VALUES (?, ?, ?, ?, ?, ?);`
+      `INSERT INTO ${tableName} (uuid, ts_start, ts_end, command, result_ipfs_url, status_code, addr_requester) VALUES (?, ?, ?, ?, ?, ?, ?);`
     )
-    .bind(runUuid, tsStart, tsEnd, commandBody.join(" "), ipfsUrl, 0)
+    .bind(runUuid, tsStart, tsEnd, commandBody.join(" "), ipfsUrl, 0, pubKey)
     .run()
     .then(({ meta: insert }) => insert.txn?.wait());
   console.log("Job successfully saved to DB");

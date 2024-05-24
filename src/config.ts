@@ -16,6 +16,7 @@ const missingEnvVars = [
   "DESCI_API_KEY",
   "DESCI_PKEY",
   "DESCI_SERVER",
+  "COOPHIVE_PKEY",
 ].filter((envVar) => !process.env[envVar]);
 
 if (missingEnvVars.length) {
