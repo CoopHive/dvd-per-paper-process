@@ -137,7 +137,7 @@ const main = async () => {
     ts_end: tsEnd,
     command: commandBody.join(" "),
     result_ipfs_url: ipfsUrl,
-    dealData: runInfo,
+    deal_data: runInfo,
   });
   console.log("Job successfully published to DeSci Nodes");
 };
