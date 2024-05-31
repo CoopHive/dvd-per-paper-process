@@ -118,13 +118,17 @@ const main = async () => {
   const lastLine = inspectOutLines[inspectOutLines.length - 2];
   const runInfo = JSON.parse(lastLine);
 
-  await tablelandInsert(tableName as string, {
+  const sharedMetadata = {
     uuid: runUuid,
     ts_start: tsStart,
     ts_end: tsEnd,
     command: commandBody.join(" "),
     result_ipfs_url: ipfsUrl,
     status_code: 0,
+  };
+
+  await tablelandInsert(tableName as string, {
+    ...sharedMetadata,
     addr_requester: pubKey,
     addr_resource_provider: runInfo["Members"]["ResourceProvider"],
     addr_mediator: runInfo["Members"]["Mediators"][0],
@@ -133,9 +137,7 @@ const main = async () => {
 
   console.log("Job successfully saved to DB");
   await uploadJsonToDesci(desciUuid as string, `${tsStart}_${runUuid}`, {
-    ts_start: tsStart,
-    ts_end: tsEnd,
-    command: commandBody.join(" "),
+    ...sharedMetadata,
     result_ipfs_url: ipfsUrl,
     deal_data: runInfo,
   });
