@@ -1,12 +1,12 @@
 // third-party sdks
 import { publishDraftNode, uploadFiles } from "@desci-labs/nodes-lib";
+import type { ValuesType } from "@tableland/sdk";
 import ethers from "ethers";
 // node
 import { spawn } from "child_process";
 import fs from "fs";
 // config
 import { db, desciUuid, nodesSigner, tableName } from "./config.ts";
-import type { ValuesType } from "@tableland/sdk";
 
 // util
 const sh = (command: string, args: string[]) => {
@@ -57,7 +57,10 @@ const uploadJsonToDesci = async (
   data: any
 ) => {
   try {
-    fs.writeFileSync(`tmp/${fileName}.json`, JSON.stringify(data));
+    fs.writeFileSync(
+      `tmp/${fileName}.json`,
+      JSON.stringify(data, undefined, 2)
+    );
     await uploadFiles({
       uuid: nodeUuid,
       contextPath: "/runs",
