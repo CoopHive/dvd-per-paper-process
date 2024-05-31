@@ -134,8 +134,8 @@ const main = async () => {
     addr_mediator: runInfo["Members"]["Mediators"][0],
     addr_solver: runInfo["Members"]["Solver"],
   });
-
   console.log("Job successfully saved to DB");
+
   await uploadJsonToDesci(desciUuid as string, `${tsStart}_${runUuid}`, {
     ...sharedMetadata,
     result_ipfs_url: ipfsUrl,
