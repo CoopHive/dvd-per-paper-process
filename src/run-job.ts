@@ -138,7 +138,6 @@ const main = async () => {
 
   await uploadJsonToDesci(desciUuid as string, `${tsStart}_${runUuid}`, {
     ...sharedMetadata,
-    result_ipfs_url: ipfsUrl,
     deal_data: runInfo,
   });
   console.log("Job successfully published to DeSci Nodes");
