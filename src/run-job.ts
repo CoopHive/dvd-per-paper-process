@@ -93,7 +93,7 @@ const main = async () => {
       ts_end: tsEnd,
       command: commandBody.join(" "),
       status_code: 1,
-      addr_requester: pubKey,
+      addr_job_creator: pubKey,
     });
 
     throw new Error("Job failed");
@@ -129,10 +129,10 @@ const main = async () => {
 
   await tablelandInsert(tableName as string, {
     ...sharedMetadata,
-    addr_requester: pubKey,
-    addr_resource_provider: runInfo["Members"]["ResourceProvider"],
-    addr_mediator: runInfo["Members"]["Mediators"][0],
-    addr_solver: runInfo["Members"]["Solver"],
+    addr_solver: runInfo["Deal"]["Members"]["Solver"],
+    addr_job_creator: pubKey,
+    addr_resource_provider: runInfo["Deal"]["Members"]["ResourceProvider"],
+    addr_mediator: runInfo["Deal"]["Members"]["Mediators"][0],
   });
   console.log("Job successfully saved to DB");
 
