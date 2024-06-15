@@ -133,6 +133,7 @@ const main = async () => {
     addr_job_creator: pubKey,
     addr_resource_provider: runInfo["Deal"]["Members"]["ResourceProvider"],
     addr_mediator: runInfo["Deal"]["Members"]["Mediators"][0],
+    instruction_count: runInfo["Result"]["InstructionCount"],
   });
   console.log("Job successfully saved to DB");
 
