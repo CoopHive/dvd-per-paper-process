@@ -38,8 +38,11 @@ export const desciUuid = process.env.DESCI_NODE_UUID;
 
 export interface RunsSchema {
   id: number;
+  uuid: string;
+  status_code: number;
   ts_start: number;
   ts_end: number;
+
   command: string;
   result_ipfs_url: string;
   instruction_count: number;
