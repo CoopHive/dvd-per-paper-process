@@ -64,6 +64,7 @@ const uploadJsonToDesci = async (
   data: any
 ) => {
   try {
+    if (!fs.existsSync("tmp")) fs.mkdirSync("tmp");
     fs.writeFileSync(
       `tmp/${fileName}.json`,
       JSON.stringify(data, undefined, 2)
