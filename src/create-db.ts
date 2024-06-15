@@ -12,6 +12,7 @@ const main = async () => {
 
       command TEXT NOT NULL,
       result_ipfs_url TEXT,
+      instruction_count INTEGER,
       addr_solver TEXT,
       addr_job_creator TEXT,
       addr_resource_provider TEXT,

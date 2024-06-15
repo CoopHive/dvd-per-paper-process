@@ -42,6 +42,7 @@ export interface RunsSchema {
   ts_end: number;
   command: string;
   result_ipfs_url: string;
+  instruction_count: number;
   addr_resource_provider: string;
   addr_mediator: string;
   addr_solver: string;
