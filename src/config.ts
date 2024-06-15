@@ -43,9 +43,10 @@ export interface RunsSchema {
   command: string;
   result_ipfs_url: string;
   instruction_count: number;
+  addr_solver: string;
+  addr_job_creator: string;
   addr_resource_provider: string;
   addr_mediator: string;
-  addr_solver: string;
 }
 
 const wallet = new Wallet(process.env.TABLELAND_PKEY as string);

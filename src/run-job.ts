@@ -6,7 +6,13 @@ import ethers from "ethers";
 import { spawn } from "child_process";
 import fs from "fs";
 // config
-import { db, desciUuid, nodesSigner, tableName } from "./config.ts";
+import {
+  db,
+  desciUuid,
+  nodesSigner,
+  tableName,
+  type RunsSchema,
+} from "./config.ts";
 
 // util
 const sh = (command: string, args: string[]) => {
@@ -34,9 +40,10 @@ const sh = (command: string, args: string[]) => {
   });
 };
 
+type RunSchemaKeys = keyof RunsSchema;
 const tablelandInsert = async (
   table: string,
-  data: Record<string, ValuesType>
+  data: Partial<Record<RunSchemaKeys, ValuesType>>
 ) => {
   await db
     .prepare(
