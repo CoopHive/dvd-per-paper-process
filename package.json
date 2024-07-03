@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@desci-labs/nodes-lib": "^0.0.7-rc0",
-    "@tableland/sdk": "^7.0.1-pre.0",
+    "@tableland/sdk": "latest",
     "ethers": "^5.7.2",
     "ethers-6": "npm:ethers@^6.12.0"
   }

@@ -1,5 +1,16 @@
 // third-party sdks
-import { publishDraftNode, uploadFiles } from "@desci-labs/nodes-lib";
+import {
+  addExternalCid,
+  createDraftNode,
+  publishDraftNode,
+  uploadFiles,
+} from "@desci-labs/nodes-lib";
+import {
+  ResearchObjectComponentType,
+  ResearchObjectComponentDocumentSubtype,
+  ResearchObjectComponentDataSubtype,
+  type ResearchField,
+} from "@desci-labs/desci-models";
 import type { ValuesType } from "@tableland/sdk";
 import ethers from "ethers";
 // node
@@ -108,15 +119,25 @@ const main = async () => {
   }
 
   // success
-  const ipfsUrl = hiveRunOut.match(
-    /https:\/\/ipfs\.io\/ipfs\/[a-zA-Z0-9]+/
-  )?.[0];
-  if (typeof ipfsUrl !== "string") {
-    throw new Error("IPFS URL not found");
+  const outIpfsMatch = hiveRunOut.match(
+    /https:\/\/ipfs\.io\/ipfs\/(?<cid>[a-zA-Z0-9]+)/
+  );
+  const outIpfsUrl = outIpfsMatch?.[0];
+  const outIpfsCid = outIpfsMatch?.groups?.cid;
+  if (typeof outIpfsUrl !== "string" || typeof outIpfsCid !== "string") {
+    throw new Error("IPFS URL not found in output");
   }
 
-  const dealId = hiveRunOut.match(/hive inspect (?<cid>[a-zA-Z0-9]+)/)?.groups
-    ?.cid;
+  const inIpfsMatch = commandBody
+    .join(" ")
+    .match(/input=\/inputs\/(?<cid>[a-zA-Z0-9]+)/);
+  const inIpfsCid = inIpfsMatch?.groups?.cid;
+  if (typeof inIpfsCid !== "string") {
+    throw new Error("IPFS CID not found in input");
+  }
+
+  const dealId = hiveRunOut.match(/hive inspect (?<id>[a-zA-Z0-9]+)/)?.groups
+    ?.id;
   if (typeof dealId !== "string") {
     throw new Error("Deal ID not found");
   }
@@ -131,7 +152,7 @@ const main = async () => {
     ts_start: tsStart,
     ts_end: tsEnd,
     command: commandBody.join(" "),
-    result_ipfs_url: ipfsUrl,
+    result_ipfs_url: outIpfsUrl,
     status_code: 0,
   };
 
@@ -151,5 +172,41 @@ const main = async () => {
   });
   console.log("Job successfully published to DeSci Nodes");
 };
+
+async function makePaperNode(
+  pdfCid: string,
+  mdCid: string,
+  doi: string,
+  title: string,
+  researchFields: ResearchField[]
+) {
+  // TODO make node metadata match paper metadata
+  const {
+    node: { uuid },
+  } = await createDraftNode({
+    title,
+    defaultLicense: "CC-BY-4.0",
+    researchFields,
+  });
+  console.log("uuid: ", uuid);
+
+  await addExternalCid({
+    uuid,
+    contextPath: "/",
+    componentType: ResearchObjectComponentType.PDF,
+    componentSubtype: ResearchObjectComponentDocumentSubtype.RESEARCH_ARTICLE,
+    externalCids: [{ cid: pdfCid, name: "source" }],
+  });
+  await addExternalCid({
+    uuid,
+    contextPath: "/",
+    componentType: ResearchObjectComponentType.DATA,
+    componentSubtype: ResearchObjectComponentDataSubtype.PROCESSED_DATA,
+    externalCids: [{ cid: mdCid, name: "markdown" }],
+  });
+
+  await publishDraftNode(uuid, nodesSigner);
+  console.log("Node published");
+}
 
 main();
