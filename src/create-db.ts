@@ -16,7 +16,9 @@ const main = async () => {
       addr_solver TEXT,
       addr_job_creator TEXT,
       addr_resource_provider TEXT,
-      addr_mediator TEXT
+      addr_mediator TEXT,
+
+      doi TEXT,
       );`
     )
     .run();

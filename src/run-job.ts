@@ -92,13 +92,20 @@ const uploadJsonToDesci = async (
 };
 
 // main
-const main = async () => {
-  const commandBody = process.argv.slice(2);
+const runMarker = async (cid: string, doi: string) => {
+  process.env["WEB3_PRIVATE_KEY"] = process.env.COOPHIVE_PKEY;
+  const commandBody = [
+    "marker:v2.0.0",
+    "-i",
+    `ipfs="https://gateway.lighthouse.storage/ipfs"`,
+    "-i",
+    `cid="${cid}"`,
+  ];
 
   const tsStart = Math.floor(new Date().getTime() / 1000);
-  process.env["WEB3_PRIVATE_KEY"] = process.env.COOPHIVE_PKEY;
   const { stdout: hiveRunOut } = await sh("hive", ["run", ...commandBody]);
   const tsEnd = Math.floor(new Date().getTime() / 1000);
+
   const runUuid = crypto.randomUUID();
   const pubKey = ethers.utils.computePublicKey(
     process.env.COOPHIVE_PKEY as string
@@ -113,9 +120,10 @@ const main = async () => {
       command: commandBody.join(" "),
       status_code: 1,
       addr_job_creator: pubKey,
+      doi,
     });
 
-    throw new Error("Job failed");
+    throw new Error(`Job ${doi}, ${cid} failed: ${hiveRunOut}`);
   }
 
   // success
@@ -154,6 +162,7 @@ const main = async () => {
     command: commandBody.join(" "),
     result_ipfs_url: outIpfsUrl,
     status_code: 0,
+    doi,
   };
 
   await tablelandInsert(tableName as string, {
@@ -164,13 +173,27 @@ const main = async () => {
     addr_mediator: runInfo["Deal"]["Members"]["Mediators"][0],
     instruction_count: runInfo["Result"]["InstructionCount"],
   });
-  console.log("Job successfully saved to DB");
+  console.log("Job successfully saved to Tableland DB");
 
   await uploadJsonToDesci(desciUuid as string, `${tsStart}_${runUuid}`, {
     ...sharedMetadata,
     deal_data: runInfo,
   });
   console.log("Job successfully published to DeSci Nodes");
+
+  return hiveRunOut;
+};
+
+const processPaper = async (pdfCid: string, doi: string) => {
+  // convert pdf to markdown with marker
+
+  // optional: chunk pdfs
+
+  // generate embedding
+
+  // upload embedding to vector db (name after doi)
+
+  return;
 };
 
 async function makePaperNode(
@@ -195,18 +218,16 @@ async function makePaperNode(
     contextPath: "/",
     componentType: ResearchObjectComponentType.PDF,
     componentSubtype: ResearchObjectComponentDocumentSubtype.RESEARCH_ARTICLE,
-    externalCids: [{ cid: pdfCid, name: "source" }],
+    externalCids: [{ cid: pdfCid, name: `${doi}.pdf` }],
   });
   await addExternalCid({
     uuid,
     contextPath: "/",
     componentType: ResearchObjectComponentType.DATA,
     componentSubtype: ResearchObjectComponentDataSubtype.PROCESSED_DATA,
-    externalCids: [{ cid: mdCid, name: "markdown" }],
+    externalCids: [{ cid: mdCid, name: `${doi}.md` }],
   });
 
   await publishDraftNode(uuid, nodesSigner);
   console.log("Node published");
 }
-
-main();

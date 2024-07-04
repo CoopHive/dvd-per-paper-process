@@ -50,6 +50,8 @@ export interface RunsSchema {
   addr_job_creator: string;
   addr_resource_provider: string;
   addr_mediator: string;
+
+  doi: string;
 }
 
 const wallet = new Wallet(process.env.TABLELAND_PKEY as string);
